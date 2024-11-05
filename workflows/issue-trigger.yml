@@ -10,41 +10,36 @@ jobs:
     if: github.event.issue.pull_request == null # Ensure it's not a PR  
   
     steps:  
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - name: Checkout code  
+      uses: actions/checkout@v4  
   
-    - name: Extract issue body and parse inputs  
-      id: get-inputs  
+    - name: Extract issue body and parse inputs    
+      id: get-inputs    
+      run: |    
+        ISSUE_BODY=$(jq -r .issue.body "$GITHUB_EVENT_PATH")    
+        echo "Issue Body:"    
+        echo "$ISSUE_BODY"    
+        ASKID=$(echo "$ISSUE_BODY" | awk '/### AideID-AskID/{getline; getline; print}' | xargs)    
+        ADMIN_GROUP=$(echo "$ISSUE_BODY" | awk '/### Admin_Group/{getline; getline; print}' | xargs)    
+        DEV_GROUP=$(echo "$ISSUE_BODY" | awk '/### Dev_Group/{getline; getline; print}' | xargs)    
+        PROJECTKEY=$(echo "$ISSUE_BODY" | awk '/### Projectkey/{getline; getline; print}' | xargs)    
+        ISSUE_OPNER_MSID=$(jq -r .issue.user.login "$GITHUB_EVENT_PATH")  
+          
+        if [[ -z "$ASKID" || -z "$ADMIN_GROUP" || -z "$DEV_GROUP" || -z "$PROJECTKEY" ]]; then    
+          echo "One or more extracted values are empty."    
+          exit 1    
+        fi    
+          
+        echo "ASKID=${ASKID}" >> $GITHUB_ENV    
+        echo "ADMIN_GROUP=${ADMIN_GROUP}" >> $GITHUB_ENV    
+        echo "DEV_GROUP=${DEV_GROUP}" >> $GITHUB_ENV    
+        echo "PROJECTKEY=${PROJECTKEY}" >> $GITHUB_ENV  
+        echo "ISSUE_OPNER_MSID=${ISSUE_OPNER_MSID}" >> $GITHUB_ENV  
+  
+    - name: Display extracted details  
       run: |  
-        ISSUE_BODY=$(jq -r .issue.body "$GITHUB_EVENT_PATH")  
-        echo "Issue Body:"  
-        echo "$ISSUE_BODY"  
-        # Extract values based on the label text that users see in the issue form  
-        ASKID=$(echo "$ISSUE_BODY" | awk '/### AideID-AskID/{getline; getline; print}' | xargs)  
-        ADMIN_GROUP=$(echo "$ISSUE_BODY" | awk '/### Admin_Group/{getline; getline; print}' | xargs)  
-        DEV_GROUP=$(echo "$ISSUE_BODY" | awk '/### Dev_Group/{getline; getline; print}' | xargs)  
-        PROJECTKEY=$(echo "$ISSUE_BODY" | awk '/### Projectkey/{getline; getline; print}' | xargs)  
-          
-        # Display the extracted values for debugging  
-        echo "Extracted AideID-AskID: $ASKID"  
-        echo "Extracted Admin_Group: $ADMIN_GROUP"  
-        echo "Extracted Dev_Group: $DEV_GROUP"  
-        echo "Extracted Projectkey: $PROJECTKEY"  
-          
-        # Check if any value is empty  
-        if [[ -z "$ASKID" || -z "$ADMIN_GROUP" || -z "$DEV_GROUP" || -z "$PROJECTKEY" ]]; then  
-          echo "One or more extracted values are empty."  
-          exit 1  
-        fi  
-          
-        # fetch the user's MSID from the issue creator
-        ISSUE_OPNER_MSID=$(jq -r .issue.user.login "$GITHUB_EVENT_PATH")
-
-        # Set the extracted values as environment variables  
-        echo "ASKID=${ASKID}" >> $GITHUB_ENV  
-        echo "ADMIN_GROUP=${ADMIN_GROUP}" >> $GITHUB_ENV  
-        echo "DEV_GROUP=${DEV_GROUP}" >> $GITHUB_ENV  
-        echo "PROJECTKEY=${PROJECTKEY}" >> $GITHUB_ENV
-        echo "ISSUE_OPNER_MSID=${ISSUE_OPNER_MSID}" >> $GITHUB_ENV
-  
-   
+        echo "AideID-AskID: $ASKID"  
+        echo "Admin Group: $ADMIN_GROUP"  
+        echo "Dev Group: $DEV_GROUP"  
+        echo "Project Key: $PROJECTKEY"  
+        echo "Issue Opener MSID: $ISSUE_OPNER_MSID"  
