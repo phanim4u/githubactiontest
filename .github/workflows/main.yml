@@ -40,7 +40,7 @@ jobs:
         uses: actions-cool/issues-helper@v3  
         with:  
           actions: 'update-issue'  
-          token: ${{ secrets.GITHUB_TOKEN }}  
+          token: ${{ secrets.MY_TOKEN }}  
           issue-number: ${{ github.event.issue.number }}  
           state: 'open'  
           title: 'AskID: ${{ env.ASKID }}'  
