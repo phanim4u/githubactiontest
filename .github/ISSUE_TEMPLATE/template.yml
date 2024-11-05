@@ -1,0 +1,39 @@
+name: Permission_Template_Creation  
+description: This template is for tracking the creation of permission templates on SonarQube as part of the migration process to GitHub Enterprise Cloud.  
+labels: ["migration", "github-enterprise-cloud", "eci"]
+title: Create_Permission_Template_ASK_ID
+assignees: ghec-mig_uhg  
+body:  
+  - type: input  
+    id: Projectkey  
+    attributes:  
+      label: "Projectkey"  
+      description: "Enter your projects ProjectKey "  
+    validations:  
+      required: true  
+  
+  - type: input  
+    id: askid  
+    attributes:  
+      label: "AideID-AskID"  
+      description: "Enter your project's ASK ID (see requirements below)"  
+    validations:  
+      required: true  
+ 
+  - type: input  
+    id: Admin_Group  
+    attributes:  
+      label: "Admin_Group"  
+      description: "Enter the AD group that represents your team leads or admins (see requirements below)"  
+    validations:  
+      required: true  
+  
+  - type: input  
+    id: Dev_Group  
+    attributes:  
+      label: "Dev_Group"  
+      description: "Enter the AD group of that represents your Developers  (see requirements below)"  
+    validations:  
+      required: true  
+
+
