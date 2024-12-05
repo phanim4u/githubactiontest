@@ -47,5 +47,5 @@ jobs:
       - name: Update issue using GitHub CLI  
         run: 'gh issue edit ${{ github.event.issue.number }} --title "Created-Permission-Template-For-AskID: ${{ env.ASKID }}"'    
         env:  
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
           
