@@ -36,12 +36,16 @@ jobs:
           echo "PROJECTKEY=${PROJECTKEY}" >> $GITHUB_ENV  
           echo "ISSUE_OPNER_MSID=${ISSUE_OPNER_MSID}" >> $GITHUB_ENV  
   
-      - name: Update issue  
-        uses: actions-cool/issues-helper@v3  
-        with:  
-          actions: 'update-issue'  
-          token: ${{ secrets.MY_TOKEN }}  
-          issue-number: ${{ github.event.issue.number }}  
-          state: 'open'  
-          title: 'AskID: ${{ env.ASKID }}'  
+      # - name: Update issue  
+      #   uses: actions-cool/issues-helper@v3  
+      #   with:  
+      #     actions: 'update-issue'  
+      #     token: ${{ secrets.MY_TOKEN }}  
+      #     issue-number: ${{ github.event.issue.number }}  
+      #     state: 'open'  
+      #     title: 'AskID: ${{ env.ASKID }}'  
+      - name: Update issue using GitHub CLI  
+        run: gh issue update ${{ github.event.issue.number }} --title "Created-Permission-Template-For-AskID: ${{ env.ASKID }}" --state open  
+        env:  
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
