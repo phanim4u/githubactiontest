@@ -43,3 +43,8 @@ jobs:
         echo "Dev Group: $DEV_GROUP"  
         echo "Project Key: $PROJECTKEY"  
         echo "Issue Opener MSID: $ISSUE_OPNER_MSID"  
+
+    - name: Update issue using GitHub CLI  
+      run: gh issue update ${{ github.event.issue.number }} --title "Created-Permission-Template-For-AskID: ${{ env.ASKID }}" --state open  
+      env:  
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
